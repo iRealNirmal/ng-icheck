@@ -1,2 +1,2 @@
 # ng-icheck
-iceck angular version
+icheck angular version
