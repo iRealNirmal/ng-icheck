@@ -1,0 +1,38 @@
+var ngIcheck= angular.module('ngIcheck', []);
+ 
+ngIcheck.directive('icheck', function($timeout) {
+return {
+        restrict: 'A',
+        link: function ($scope, element, $attrs) {
+            var value = $attrs['value'],
+                ngModelGetter = $parse($attrs['ngModel']);
+
+            return $timeout(function () {
+
+                $scope.$watch($attrs.ngModel, function (newValue) {
+                    $(element).iCheck('update');
+                });
+
+                $(element).iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green'
+                }).on('ifChanged', function (event) {
+
+                    var elemType = $(element).attr('type');
+
+                    if (elemType === 'checkbox' && $attrs.ngModel) {
+                        $scope.$apply(function () {
+                            return ngModelGetter.assign($scope, event.target.checked);
+                        });
+                    }
+                    else if (elemType === 'radio' && $attrs.ngModel) {
+                        return $scope.$apply(function () {
+                            return ngModelGetter.assign($scope, value);
+                        });
+                    }
+                });
+
+            });
+        }
+    };
+}
